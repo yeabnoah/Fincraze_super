@@ -7,8 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState, useEffect } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useState } from "react";
 import { router } from "expo-router";
 import useUserStore from "@/state/user";
 import axios from "axios";
@@ -19,8 +18,6 @@ import useRateStore from "@/state/rate";
 export default function Details() {
   const { user } = useUserStore();
   const { city } = useCityStore();
-  const [error, setError] = useState("");
-  const { country } = useCountryStore();
   const { rate } = useRateStore();
 
   const [formData, setFormData] = useState({
@@ -31,32 +28,51 @@ export default function Details() {
     phoneNumber: "",
     amount: "",
     sender_message: "",
+    exchangedAmount: "",
   });
 
-  const [exchangedAmount, setExchangedAmount] = useState("");
+  const [error, setError] = useState("");
 
   const handleChange = (key, value) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      [key]: value,
-    }));
-
     if (key === "amount") {
       const amount = parseFloat(value) || 0;
-      setExchangedAmount((amount * rate).toFixed(2));
+      const exchangedAmount = (amount * rate).toFixed(2);
+      setFormData((prevState) => ({
+        ...prevState,
+        amount: value,
+        exchangedAmount: exchangedAmount,
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [key]: value,
+      }));
     }
   };
 
   const handleSubmit = () => {
+    const postData = {
+      amount: formData.exchangedAmount,
+      from: formData.from,
+      phoneNumber: formData.phoneNumber,
+      sender_message: formData.sender_message,
+      to: formData.to,
+      toCity: city.name, // assuming city._id contains the correct ID
+      transactionFee: user.transactionFee,
+    };
+
     axios
-      .post(`https://fincraze.net/sender/sendMoney/${user._id}`, formData)
+      .post(`https://fincraze.net/plus/sendMoney/${user._id}`, postData)
       .then((response) => {
         console.log("Response:", response.data);
         router.navigate("/Home");
       })
       .catch((error) => {
         console.error("Error:", error);
+        setError("An error occurred while sending money. Please try again.");
       });
+
+    console.log(postData);
   };
 
   return (
@@ -73,7 +89,7 @@ export default function Details() {
         </TouchableOpacity>
 
         <View className="mx-5 mt-5">
-          <Text className=" text-orange-400 text-xl text-right">
+          <Text className="text-orange-400 text-xl text-right">
             Current Exchange Rate: {rate}
           </Text>
 
@@ -117,7 +133,7 @@ export default function Details() {
             onChangeText={(text) => handleChange("amount", text)}
           />
           <Text className="text-orange-400 text-lg mt-2">
-            Exchanged Amount: {exchangedAmount}
+            Exchanged Amount: {formData.exchangedAmount}
           </Text>
         </View>
 
@@ -133,7 +149,11 @@ export default function Details() {
           />
         </View>
 
-        <View className="flex-row justify-center mt-10">
+        {error ? (
+          <Text className="text-red-500 text-lg text-center mt-5">{error}</Text>
+        ) : null}
+
+        <View className="flex-row justify-center mt-10 mb-10">
           <TouchableOpacity
             onPress={handleSubmit}
             className="bg-secondary w-36 p-3 rounded-md"

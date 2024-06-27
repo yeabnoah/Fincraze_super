@@ -21,7 +21,7 @@ export default function Transaction() {
   const deleteForMe = async (id) => {
     try {
       const response = await axios.patch(
-        `https://fincraze.net/sender/deleteForMe/${id}`,
+        `https://fincraze.net/plus/deleteForMe/${id}`,
         {
           senderStatus: false,
         }
@@ -37,7 +37,7 @@ export default function Transaction() {
 
   const fetchTransaction = async () => {
     const response = await axios.get(
-      `https://fincraze.net/sender/gettransactions/${user?._id}`
+      `https://fincraze.net/plus/gettransactions/${user?._id}`
     );
 
     setTransactions(response.data);
