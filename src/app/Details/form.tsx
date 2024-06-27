@@ -2,30 +2,28 @@ import {
   View,
   Text,
   StatusBar,
-  Image,
-  TouchableOpacity,
   TextInput,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
-import { Entypo, FontAwesome6, Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import useUserStore from "@/state/user";
 import axios from "axios";
 import useCityStore from "@/state/city";
 import useCountryStore from "@/state/country";
-import { response } from "express";
-import Ip from "../../utils/ip";
+import useRateStore from "@/state/rate";
 
 export default function Details() {
-  const { user, setUser } = useUserStore();
-  const { city, setCity } = useCityStore();
+  const { user } = useUserStore();
+  const { city } = useCityStore();
   const [error, setError] = useState("");
-  const { country, setCountry } = useCountryStore();
+  const { country } = useCountryStore();
+  const { rate } = useRateStore();
 
   const [formData, setFormData] = useState({
-    // country: country,
     transactionFee: user.transactionFee,
     toCity: city.name,
     from: "",
@@ -35,11 +33,18 @@ export default function Details() {
     sender_message: "",
   });
 
+  const [exchangedAmount, setExchangedAmount] = useState("");
+
   const handleChange = (key, value) => {
     setFormData((prevState) => ({
       ...prevState,
       [key]: value,
     }));
+
+    if (key === "amount") {
+      const amount = parseFloat(value) || 0;
+      setExchangedAmount((amount * rate).toFixed(2));
+    }
   };
 
   const handleSubmit = () => {
@@ -50,11 +55,8 @@ export default function Details() {
         router.navigate("/Home");
       })
       .catch((error) => {
-        // Handle error
         console.error("Error:", error);
       });
-
-    // console.log(formData);
   };
 
   return (
@@ -71,6 +73,10 @@ export default function Details() {
         </TouchableOpacity>
 
         <View className="mx-5 mt-5">
+          <Text className=" text-orange-400 text-xl text-right">
+            Current Exchange Rate: {rate}
+          </Text>
+
           <Text className="text-white font-poppins text-lg">From</Text>
           <TextInput
             placeholder="from"
@@ -110,6 +116,9 @@ export default function Details() {
             value={formData.amount}
             onChangeText={(text) => handleChange("amount", text)}
           />
+          <Text className="text-orange-400 text-lg mt-2">
+            Exchanged Amount: {exchangedAmount}
+          </Text>
         </View>
 
         <View className="mx-5">

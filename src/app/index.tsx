@@ -17,7 +17,7 @@ import {
 import { useFonts } from "expo-font";
 import axios from "axios";
 import useUserStore from "@/state/user";
-import Ip from "../utils/ip";
+// import Ip from "../utils/ip";
 
 const { height, width } = Dimensions.get("window");
 
@@ -29,7 +29,7 @@ export default function Page() {
 
   const login = async () => {
     try {
-      const response = await axios.post(`https://fincraze.net/sender/login`, {
+      const response = await axios.post(`https://fincraze.net/plus/login`, {
         username: username,
         password: password,
       });
@@ -66,7 +66,7 @@ export default function Page() {
       </View>
       <View className=" mx-5 mt-10 h-max">
         <Text className=" text-white text-5xl font-poppinsBold pt-2">
-          Login
+          Login Super
         </Text>
         <Text className=" text-gray-400 text-xl font-poppins mt-1 ">
           Please Sign In to Continue

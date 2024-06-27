@@ -18,7 +18,8 @@ import useUserStore from "@/state/user";
 export default function Home() {
   const { country, setCountry } = useCountryStore();
   const [countries, setCountries] = useState([]);
-  const { user, setUser } = useUserStore();
+
+  // const { user, setUser } = useUserStore();
 
   const fetchCity = async (id) => {
     try {
@@ -33,23 +34,23 @@ export default function Home() {
     }
   };
 
-  const fetchUser = async () => {
-    try {
-      const response = await axios.get(
-        `https://fincraze.net/admin/getsenderbyid/${user?._id}`
-      );
-      setUser(response.data);
-      // console.log(user);
-      // console.log(
-      //   "this is for the user Fetch 000000000000000000000000000000000"
-      // );
-    } catch (err) {
-      console.error("Error fetching users:", err);
-      console.log(
-        "this is for the user Fetch 000000000000000000000000000000000"
-      );
-    }
-  };
+  // const fetchUser = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `https://fincraze.net/admin/getsenderbyid/${user?._id}`
+  //     );
+  //     setUser(response.data);
+  //     // console.log(user);
+  //     // console.log(
+  //     //   "this is for the user Fetch 000000000000000000000000000000000"
+  //     // );
+  //   } catch (err) {
+  //     console.error("Error fetching users:", err);
+  //     console.log(
+  //       "this is for the user Fetch 000000000000000000000000000000000"
+  //     );
+  //   }
+  // };
 
   const fetchCountries = async () => {
     try {
@@ -65,7 +66,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchCountriesInterval = setInterval(() => {
-      fetchUser();
+      fetchCountries();
     }, 2000); // Fetch every 2 seconds
 
     // Cleanup function to clear the interval when the component unmounts or when dependencies change
@@ -85,30 +86,30 @@ export default function Home() {
 
         <View className=" flex-row justify-between mx-5 pt-1 items-center">
           <Text className=" text-white font-poppinsMedium text-xl">
-            Country
+            Countries List
           </Text>
 
-          <View className=" flex-row gap-1 items-center">
+          {/* <View className=" flex-row gap-1 items-center">
             <Text className=" text-white font-poppinsMedium text-xl">
-              Balance
+              plus User
             </Text>
             <Entypo name="wallet" size={20} color="white" />
-          </View>
+          </View> */}
         </View>
 
         <ScrollView className=" mb-2">
-          {user.countries.map((country) => {
-            const x = `https://www.worldometers.info/img/flags/${country.country.name
+          {countries.map((country) => {
+            const x = `https://www.worldometers.info/img/flags/${country.name
               .charAt(0)
-              .toLowerCase()}${country.country.name
-              .charAt(1)
-              .toLowerCase()}-flag.gif`;
+              .toLowerCase()}${country.name.charAt(1).toLowerCase()}-flag.gif`;
             // console.log(x);
+
+            // console.log("***************************", country);
             return (
               <TouchableOpacity
                 key={country._id}
                 onPress={() => {
-                  fetchCity(country.country._id); // Pass country._id to fetchCity function
+                  fetchCity(country._id); // Pass country._id to fetchCity function
                 }}
                 className=" h-max py-3 px-3 mx-5 mt-5 rounded-md flex flex-row justify-between items-center bg-third"
               >
@@ -121,12 +122,13 @@ export default function Home() {
                     style={{ height: 33, width: 45 }}
                   />
                   <Text className=" text-lg text-white mx-2 font-poppins ">
-                    {country.country.name}
+                    {country.name}
                   </Text>
                 </View>
 
                 <Text className=" text-white font-poppins text-lg">
-                  {country.balance}
+                  {/* {country.balance} */}
+                  unlimited
                 </Text>
               </TouchableOpacity>
             );

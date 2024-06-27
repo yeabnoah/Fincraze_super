@@ -12,9 +12,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import useCountryStore from "@/state/country";
 import useCityStore from "@/state/city";
+import useCityNameStore from "@/state/cityName";
 
 export default function Details() {
   const { city, setCity } = useCityStore();
+  const { cityName, setCityName } = useCityNameStore();
   const { country, setCountry } = useCountryStore();
   const x = `https://www.worldometers.info/img/flags/${country.name
     .charAt(0)
@@ -61,8 +63,9 @@ export default function Details() {
             <TouchableOpacity
               key={city._id}
               onPress={() => {
-                router.navigate("Details/form");
+                router.navigate("Details/checkExchange");
                 setCity(city._id);
+                setCityName(city.name);
                 console.log(city.name);
               }}
               className=" h-max py-3 px-3 mx-5 mt-5 rounded-md flex flex-row justify-between items-center bg-third"
@@ -75,31 +78,6 @@ export default function Details() {
             </TouchableOpacity>
           ))}
         </ScrollView>
-        {/* <TouchableOpacity
-          onPress={() => {
-            router.navigate("Details/form");
-          }}
-          className=" h-max py-3 px-3 mx-5 mt-5 rounded-md flex flex-row justify-between items-center bg-third"
-        >
-          <View className=" flex-row items-center">
-            <Text className=" text-lg text-white mx-2 font-poppinsMedium ">
-              Dire Dawa
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            router.navigate("Details/form");
-          }}
-          className=" h-max py-3 px-3 mx-5 mt-5 rounded-md flex flex-row justify-between items-center bg-third"
-        >
-          <View className=" flex-row items-center">
-            <Text className=" text-lg text-white mx-2 font-poppinsMedium ">
-              Hawassa
-            </Text>
-          </View>
-        </TouchableOpacity> */}
       </View>
 
       <View
