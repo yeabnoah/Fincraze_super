@@ -11,7 +11,7 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import axios from "axios";
-import Ip from "../utils/ip";
+// import Ip from "../utils/ip";
 import useUserStore from "@/state/user";
 
 export default function Transaction() {

@@ -66,7 +66,7 @@ export default function Page() {
       </View>
       <View className=" mx-5 mt-10 h-max">
         <Text className=" text-white text-5xl font-poppinsBold pt-2">
-          Login Super
+          Login Plus user
         </Text>
         <Text className=" text-gray-400 text-xl font-poppins mt-1 ">
           Please Sign In to Continue
